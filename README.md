@@ -1,0 +1,2 @@
+# acronymGen
+basic acronym generator
