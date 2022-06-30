@@ -1,10 +1,18 @@
+const prompt = require('prompt-sync')();
 const axios = require('axios');
 
+// Word variables
+let firstWord = "";
+let secondWord = "";
+let thirdWord = "";
+let fourthWord = "";
 
-let letterO = "";
-let letterC = "";
-let letterW = "";
-let letterP = "";
+
+// Letter variables
+let firstLetter = "";
+let secondLetter = "";
+let thirdLetter = "";
+let fourthLetter = "";
 
 console.log("Application will start");
 
@@ -20,32 +28,42 @@ async function getRandomWord(character) {
     console.log(`Got word starting with ${character}: ${word.word}`)
 
     return word.word;
+}
 
-    /** 
-    .then(res => {
+async function getRelatedWord(relatedWord, character) {
+  //words related to duck that start with the letter b
+  //	/words?ml=duck&sp=b*
 
-      
-      for(word of words) {
-        console.log(`Got word starting with ${character}: ${word.word}`);
-      }
-       
-    })
-    .catch(err => {
-      console.log('Error: ', err.message);
-    });
-    */
+  // words that often follow "drink" in a sentence, that start with the letter w
+  // /words?lc=drink&sp=w*
+  const result = await axios.get("https://api.datamuse.com/words?lc="+relatedWord+"&sp="+character+"*&max=70");
+
+  const words = result.data;
+
+  var word = words[Math.floor(Math.random()*words.length)];
+
+  console.log(`Got word related to with ${relatedWord}: ${word.word}`)
+
+  return word.word;
+
 }
 
 (async () => {
     // console.log(await getRandomWord(`o`));
-    letterO = await getRandomWord(`o`);
-    letterC = await getRandomWord(`c`);
-    letterW = await getRandomWord(`w`);
-    letterP = await getRandomWord(`p`);
+    firstLetter = prompt('What is the first letter? ');
+    secondLetter = prompt('What is the second letter? ');
+    thirdLetter = prompt('What is the third letter? ');
+    fourthLetter = prompt('What is the fourth letter? ');
 
-    console.log(`Your random OCWP acronym is : ${letterO} ${letterC} ${letterW} ${letterP}`);
+    firstWord = await getRandomWord(firstLetter);
+    secondWord = await getRelatedWord(firstWord, secondLetter);
+    thirdWord = await getRelatedWord(secondWord , thirdLetter);
+    fourthWord = await getRelatedWord(thirdWord, fourthLetter);
+
+    console.log(`Your random acronym is : ${firstWord} ${secondWord} ${thirdWord} ${fourthWord}`);
 
   })()
+
 
 
 
